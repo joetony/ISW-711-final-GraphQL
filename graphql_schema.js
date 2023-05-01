@@ -2,30 +2,41 @@
 // that together define the "shape" of queries that are executed against
 // your data.
 export const typeDefs = `#graphql
-  # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
+  
 
-  # This "Player" type defines the queryable fields for every player in our data source.
-  type Player {
-    _id: String,
-    first_name: String
-    last_name: String
-    age: Int
-  }
-  type Team {
-    name: String
-    description: String
-  }
+type User {
+  _id: String
+  email: String
+}
+
+type Category {
+  _id: String
+  name: String
+}
+
+type Tag {
+  _id: String
+  name: String
+}
+
+type News {
+  _id: String
+  title: String
+  description: String
+  permanlink: String
+  date: String
+  user: User
+  category: Category
+  tags: [Tag]
+}
+
 
   # The "Query" type is special: it lists all of the available queries that
   # clients can execute, along with the return type for each. In this
   # case, the "players" query returns an array of zero or more players (defined above).
   type Query {
-    players: [Player]
-    playersByAlphabeticName(orderBy: String): [Player]
-    player(id: String): Player
-    playerByName(name: String, limit: Int): [Player]
-    teams: [Team]
-    teamsByAlphabeticName:[Team]
+    getNewsByUserId(userId: String): [News]
+    getSearchNews(userId: String, search: String, categoryId: String, tags: [String]): [News]
     version: String
   }
 `;
