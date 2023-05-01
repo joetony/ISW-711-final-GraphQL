@@ -26,12 +26,14 @@ export const getNews = async function (userId, search, categoryId, tags) {
   console.log("userId");
   console.log(userId);
   try {
-   
+
     const news = await newsModel.find().populate('user').populate('category').populate('tags');
     const filteredNews = news.filter(item => {
-      const titleMatch = item.title.toLowerCase().includes(search.toLowerCase());
-      const descMatch = item.description.toLowerCase().includes(search.toLowerCase());
-      return item.user._id === userId && (titleMatch || descMatch);
+      const titleMatch = !search || (item.title && item.title.toLowerCase().includes(search.toLowerCase()));
+      const descMatch = !search || (item.description && item.description.toLowerCase().includes(search.toLowerCase()));
+
+      return item.user._id === userId && (!categoryId || item.category._id === categoryId) && (titleMatch || descMatch);
+
     });
     if (filteredNews) {
       console.log("filteredNews");
